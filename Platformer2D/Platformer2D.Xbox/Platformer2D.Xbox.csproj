@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Platformer2D for the original Xbox. The game is the shared Platformer2D.Core sources
+       unchanged; everything console specific comes from the RXDK-DotNet props and targets, which
+       supply the -nostdlib compile against the runtime's own mscorlib, the disc staging, and the
+       ISO pack.
+
+       Set RxdkRuntimeDir to the folder holding assemblies/ from rxdk-dotnet-runtime.zip. Left
+       unset it uses build-out/ from a checkout of RXDK-DotNet. -->
+  <Import Project="../../../../msbuild/Rxdk.Title.props" />
+
+  <PropertyGroup>
+    <RootNamespace>Platformer2D</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../Platformer2D.Core/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The content lives with the shared sources rather than beside this project. -->
+    <RxdkMgcb Include="../Platformer2D.Core/Content/Platformer2D.mgcb" />
+  </ItemGroup>
+
+  <Import Project="../../../../msbuild/Rxdk.Title.targets" />
+
+</Project>
