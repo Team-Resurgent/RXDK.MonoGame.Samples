@@ -32,6 +32,9 @@ public class GameScene : Scene
     // Defines the bounds of the room that the slime and bat are contained within.
     private Rectangle _roomBounds;
 
+    // Positions the room in the middle of the screen when drawing.
+    private Matrix _roomTransform;
+
     // The sound effect to play when the slime eats a bat.
     private SoundEffect _collectSoundEffect;
 
@@ -55,7 +58,18 @@ public class GameScene : Scene
         // using the Inflate method to "Deflate" the bounds by the width and
         // height of a tile so that the bounds only covers the inside room of
         // the dungeon tilemap.
-        _roomBounds = Core.GraphicsDevice.PresentationParameters.Bounds;
+        Rectangle screenBounds = Core.GraphicsDevice.PresentationParameters.Bounds;
+        int roomWidth = (int)(_tilemap.Columns * _tilemap.TileWidth);
+        int roomHeight = (int)(_tilemap.Rows * _tilemap.TileHeight);
+
+        // The TV mode may be wider than the room, so everything is drawn offset to center it.
+        _roomTransform = Matrix.CreateTranslation(
+            (screenBounds.Width - roomWidth) / 2,
+            (screenBounds.Height - roomHeight) / 2,
+            0
+        );
+
+        _roomBounds = new Rectangle(0, 0, roomWidth, roomHeight);
         _roomBounds.Inflate(-_tilemap.TileWidth, -_tilemap.TileHeight);
 
         // Subscribe to the slime's BodyCollision event so that a game over
@@ -135,18 +149,18 @@ public class GameScene : Scene
 
         // Create the tilemap from the XML configuration file.
         _tilemap = Tilemap.FromFile(Content, "images/tilemap-definition.xml");
-        _tilemap.Scale = new Vector2(4.0f, 4.0f);
+        _tilemap.Scale = new Vector2(2.0f, 2.0f);
 
         // Create the animated sprite for the slime from the atlas.
         AnimatedSprite slimeAnimation = atlas.CreateAnimatedSprite("slime-animation");
-        slimeAnimation.Scale = new Vector2(4.0f, 4.0f);
+        slimeAnimation.Scale = new Vector2(2.0f, 2.0f);
 
         // Create the slime
         _slime = new Slime(slimeAnimation);
 
         // Create the animated sprite for the bat from the atlas.
         AnimatedSprite batAnimation = atlas.CreateAnimatedSprite("bat-animation");
-        batAnimation.Scale = new Vector2(4.0f, 4.0f);
+        batAnimation.Scale = new Vector2(2.0f, 2.0f);
 
         // Load the bounce sound effect for the bat
         SoundEffect bounceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
@@ -370,10 +384,10 @@ public class GameScene : Scene
     public override void Draw(GameTime gameTime)
     {
         // Clear the back buffer.
-        Core.GraphicsDevice.Clear(Color.CornflowerBlue);
+        Core.GraphicsDevice.Clear(Color.Black);
 
         // Begin the sprite batch to prepare for rendering.
-        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _roomTransform);
 
         // Draw the tilemap
         _tilemap.Draw(Core.SpriteBatch);

@@ -8,7 +8,7 @@ namespace DungeonSlime.GameObjects;
 
 public class Bat
 {
-    private const float MOVEMENT_SPEED = 5.0f;
+    private const float MOVEMENT_SPEED = 2.5f;
 
     // The velocity of the bat that defines the direction and how much in that
     // direction to update the bats position each update cycle.

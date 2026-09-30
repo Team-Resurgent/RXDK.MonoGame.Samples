@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- AutoPong for the original Xbox. The game is the shared AutoPong.Core sources; everything
+       console specific comes from the RXDK-DotNet props and targets.
+
+       Set RxdkRuntimeDir to the folder holding assemblies/ from rxdk-dotnet-runtime.zip. Left
+       unset it uses build-out/ from a checkout of RXDK-DotNet. -->
+  <Import Project="../../../../msbuild/Rxdk.Title.props" />
+
+  <PropertyGroup>
+    <RootNamespace>AutoPong</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../AutoPong.Core/**/*.cs" Exclude="../AutoPong.Core/Content/**;../AutoPong.Core/bin/**;../AutoPong.Core/obj/**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RxdkMgcb Include="../AutoPong.Core/Content/Content.mgcb" />
+  </ItemGroup>
+
+  <Import Project="../../../../msbuild/Rxdk.Title.targets" />
+
+</Project>

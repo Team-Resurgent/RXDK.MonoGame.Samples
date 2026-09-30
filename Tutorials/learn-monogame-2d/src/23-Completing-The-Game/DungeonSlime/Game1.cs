@@ -12,7 +12,7 @@ public class Game1 : Core
     // The background theme song
     private Song _themeSong;
 
-    public Game1() : base("Dungeon Slime", 1280, 720, false)
+    public Game1() : base("Dungeon Slime", 640, 480, false)
     {
 
     }
@@ -56,12 +56,13 @@ public class Game1 : Core
         FrameworkElement.TabKeyCombos.Add(
            new KeyCombo() { PushedKey = Microsoft.Xna.Framework.Input.Keys.Down });
 
-        // The assets created for the UI were done so at 1/4th the size to keep the size of the
-        // texture atlas small.  So we will set the default canvas size to be 1/4th the size of
-        // the game's resolution then tell gum to zoom in by a factor of 4.
-        GumService.Default.CanvasWidth = GraphicsDevice.PresentationParameters.BackBufferWidth / 4.0f;
-        GumService.Default.CanvasHeight = GraphicsDevice.PresentationParameters.BackBufferHeight / 4.0f;
-        GumService.Default.Renderer.Camera.Zoom = 4.0f;
+        // The assets created for the UI were done so at 1/4th the size of a 1280x720 screen to keep
+        // the size of the texture atlas small. A TV screen is half that, so we will set the default
+        // canvas size to be 1/2 the size of the game's resolution then tell gum to zoom in by a
+        // factor of 2.
+        GumService.Default.CanvasWidth = GraphicsDevice.PresentationParameters.BackBufferWidth / 2.0f;
+        GumService.Default.CanvasHeight = GraphicsDevice.PresentationParameters.BackBufferHeight / 2.0f;
+        GumService.Default.Renderer.Camera.Zoom = 2.0f;
     }
 
     protected override void LoadContent()

@@ -22,7 +22,8 @@ namespace NeonShooter
 		private static float multiplierTimeLeft;	// time until the current multiplier expires
 		private static int scoreForExtraLife;		// score required to gain an extra life
 
-		private const string highScoreFilename = "highscore.txt";
+		// D: is the read-only disc; T: is the title's persistent save partition.
+		private const string highScoreFilename = @"T:\highscore.txt";
 
 		// Static constructor
 		static PlayerStatus()

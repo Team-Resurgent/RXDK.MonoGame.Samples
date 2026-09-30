@@ -1,10 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.5-preview.*">
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
+
+  <!-- MonoGameLibrary for the original Xbox, referenced by the DungeonSlime title. Everything
+       console specific comes from the RXDK-DotNet props and targets.
+
+       Set RxdkRuntimeDir to the folder holding assemblies/ from rxdk-dotnet-runtime.zip. Left
+       unset it uses build-out/ from a checkout of RXDK-DotNet. -->
+  <Import Project="../../../../../../../msbuild/Rxdk.Library.props" />
+
+  <Import Project="../../../../../../../msbuild/Rxdk.Library.targets" />
+
 </Project>

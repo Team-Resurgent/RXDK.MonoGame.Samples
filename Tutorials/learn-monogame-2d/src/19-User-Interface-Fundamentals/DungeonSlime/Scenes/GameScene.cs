@@ -22,7 +22,7 @@ public class GameScene : Scene
     private Vector2 _slimePosition;
 
     // Speed multiplier when moving.
-    private const float MOVEMENT_SPEED = 5.0f;
+    private const float MOVEMENT_SPEED = 2.5f;
 
     // Tracks the position of the bat.
     private Vector2 _batPosition;
@@ -35,6 +35,9 @@ public class GameScene : Scene
 
     // Defines the bounds of the room that the slime and bat are contained within.
     private Rectangle _roomBounds;
+
+    // Positions the room in the middle of the screen when drawing.
+    private Matrix _roomTransform;
 
     // The sound effect to play when the bat bounces off the edge of the screen.
     private SoundEffect _bounceSoundEffect;
@@ -64,12 +67,21 @@ public class GameScene : Scene
         Core.ExitOnEscape = false;
 
         Rectangle screenBounds = Core.GraphicsDevice.PresentationParameters.Bounds;
+        int roomWidth = (int)(_tilemap.Columns * _tilemap.TileWidth);
+        int roomHeight = (int)(_tilemap.Rows * _tilemap.TileHeight);
+
+        // The TV mode may be wider than the room, so everything is drawn offset to center it.
+        _roomTransform = Matrix.CreateTranslation(
+            (screenBounds.Width - roomWidth) / 2,
+            (screenBounds.Height - roomHeight) / 2,
+            0
+        );
 
         _roomBounds = new Rectangle(
              (int)_tilemap.TileWidth,
              (int)_tilemap.TileHeight,
-             screenBounds.Width - (int)_tilemap.TileWidth * 2,
-             screenBounds.Height - (int)_tilemap.TileHeight * 2
+             roomWidth - (int)_tilemap.TileWidth * 2,
+             roomHeight - (int)_tilemap.TileHeight * 2
          );
 
         // Initial slime position will be the center tile of the tile map.
@@ -99,15 +111,15 @@ public class GameScene : Scene
 
         // Create the slime animated sprite from the atlas.
         _slime = atlas.CreateAnimatedSprite("slime-animation");
-        _slime.Scale = new Vector2(4.0f, 4.0f);
+        _slime.Scale = new Vector2(2.0f, 2.0f);
 
         // Create the bat animated sprite from the atlas.
         _bat = atlas.CreateAnimatedSprite("bat-animation");
-        _bat.Scale = new Vector2(4.0f, 4.0f);
+        _bat.Scale = new Vector2(2.0f, 2.0f);
 
         // Create the tilemap from the XML configuration file.
         _tilemap = Tilemap.FromFile(Content, "images/tilemap-definition.xml");
-        _tilemap.Scale = new Vector2(4.0f, 4.0f);
+        _tilemap.Scale = new Vector2(2.0f, 2.0f);
 
         // Load the bounce sound effect
         _bounceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
@@ -315,6 +327,12 @@ public class GameScene : Scene
         // Get the gamepad info for gamepad one.
         GamePadInfo gamePadOne = Core.Input.GamePads[(int)PlayerIndex.One];
 
+        // If the back button is pressed, return to the title screen
+        if (gamePadOne.WasButtonJustPressed(Buttons.Back))
+        {
+            Core.ChangeScene(new TitleScene());
+        }
+
         // If the A button is held down, the movement speed increases by 1.5
         // and the gamepad vibrates as feedback to the player.
         float speed = MOVEMENT_SPEED;
@@ -367,10 +385,10 @@ public class GameScene : Scene
     public override void Draw(GameTime gameTime)
     {
         // Clear the back buffer.
-        Core.GraphicsDevice.Clear(Color.CornflowerBlue);
+        Core.GraphicsDevice.Clear(Color.Black);
 
         // Begin the sprite batch to prepare for rendering.
-        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _roomTransform);
 
         // Draw the tilemap
         _tilemap.Draw(Core.SpriteBatch);

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- NeonShooter for the original Xbox. The game is the shared NeonShooter.Core sources; the
+       XBOX define leaves out the bloom postprocess, whose HLSL shaders the console cannot run,
+       and the mouse cursor. Everything else console specific comes from the RXDK-DotNet props
+       and targets.
+
+       Set RxdkRuntimeDir to the folder holding assemblies/ from rxdk-dotnet-runtime.zip. Left
+       unset it uses build-out/ from a checkout of RXDK-DotNet. -->
+  <Import Project="../../../../msbuild/Rxdk.Title.props" />
+
+  <PropertyGroup>
+    <RootNamespace>NeonShooter</RootNamespace>
+    <DefineConstants>$(DefineConstants);XBOX</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../NeonShooter.Core/**/*.cs" Exclude="../NeonShooter.Core/Content/**;../NeonShooter.Core/bin/**;../NeonShooter.Core/obj/**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RxdkMgcb Include="../NeonShooter.Core/Content/NeonShooter.mgcb" />
+  </ItemGroup>
+
+  <Import Project="../../../../msbuild/Rxdk.Title.targets" />
+
+</Project>

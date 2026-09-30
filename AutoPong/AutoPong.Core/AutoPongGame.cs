@@ -48,11 +48,8 @@ namespace AutoPong
 
         protected override void Update(GameTime gameTime)
         {
-            if (!OperatingSystem.IsIOS())
-            {
-                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                    Exit();
-            }
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
 
             #region Update Ball
 
@@ -163,9 +160,12 @@ namespace AutoPong
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+            // The console picks the display mode, so map the 1280x720 playfield onto whatever it chose.
+            var viewport = GraphicsDevice.Viewport;
+            var scale = Matrix.CreateScale(viewport.Width / (float)GameBounds.X, viewport.Height / (float)GameBounds.Y, 1f);
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, transformMatrix: scale);
 
             //draw dots down center
             int total = GameBounds.Y / 20;

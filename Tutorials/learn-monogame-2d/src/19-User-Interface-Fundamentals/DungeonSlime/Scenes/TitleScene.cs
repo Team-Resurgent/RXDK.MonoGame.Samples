@@ -58,19 +58,22 @@ public class TitleScene : Scene
         // can close the game by pressing the escape key.
         Core.ExitOnEscape = true;
 
+        // Lay the text out around the screen center, since the TV mode sets the screen size.
+        Vector2 center = Core.GraphicsDevice.PresentationParameters.Bounds.Center.ToVector2();
+
         // Set the position and origin for the Dungeon text.
         Vector2 size = _font5x.MeasureString(DUNGEON_TEXT);
-        _dungeonTextPos = new Vector2(640, 100);
+        _dungeonTextPos = center + new Vector2(0, -130);
         _dungeonTextOrigin = size * 0.5f;
 
         // Set the position and origin for the Slime text.
         size = _font5x.MeasureString(SLIME_TEXT);
-        _slimeTextPos = new Vector2(757, 207);
+        _slimeTextPos = center + new Vector2(58, -77);
         _slimeTextOrigin = size * 0.5f;
 
         // Set the position and origin for the press enter text.
         size = _font.MeasureString(PRESS_ENTER_TEXT);
-        _pressEnterPos = new Vector2(640, 620);
+        _pressEnterPos = center + new Vector2(0, 160);
         _pressEnterOrigin = size * 0.5f;
 
         // Initialize the offset of the background pattern at zero
@@ -95,8 +98,10 @@ public class TitleScene : Scene
 
     public override void Update(GameTime gameTime)
     {
-        // If the user presses enter, switch to the game scene.
-        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Enter))
+        // If the user presses enter, or start or A on the controller, switch to the game scene.
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Enter) ||
+            Core.Input.GamePads[(int)PlayerIndex.One].WasButtonJustPressed(Buttons.Start) ||
+            Core.Input.GamePads[(int)PlayerIndex.One].WasButtonJustPressed(Buttons.A))
         {
             Core.ChangeScene(new GameScene());
         }
@@ -130,14 +135,14 @@ public class TitleScene : Scene
 
         // Draw the Dungeon text slightly offset from it is original position and
         // with a transparent color to give it a drop shadow
-        Core.SpriteBatch.DrawString(_font5x, DUNGEON_TEXT, _dungeonTextPos + new Vector2(10, 10), dropShadowColor, 0.0f, _dungeonTextOrigin, 1.0f, SpriteEffects.None, 1.0f);
+        Core.SpriteBatch.DrawString(_font5x, DUNGEON_TEXT, _dungeonTextPos + new Vector2(5, 5), dropShadowColor, 0.0f, _dungeonTextOrigin, 1.0f, SpriteEffects.None, 1.0f);
 
         // Draw the Dungeon text on top of that at its original position
         Core.SpriteBatch.DrawString(_font5x, DUNGEON_TEXT, _dungeonTextPos, Color.White, 0.0f, _dungeonTextOrigin, 1.0f, SpriteEffects.None, 1.0f);
 
         // Draw the Slime text slightly offset from it is original position and
         // with a transparent color to give it a drop shadow
-        Core.SpriteBatch.DrawString(_font5x, SLIME_TEXT, _slimeTextPos + new Vector2(10, 10), dropShadowColor, 0.0f, _slimeTextOrigin, 1.0f, SpriteEffects.None, 1.0f);
+        Core.SpriteBatch.DrawString(_font5x, SLIME_TEXT, _slimeTextPos + new Vector2(5, 5), dropShadowColor, 0.0f, _slimeTextOrigin, 1.0f, SpriteEffects.None, 1.0f);
 
         // Draw the Slime text on top of that at its original position
         Core.SpriteBatch.DrawString(_font5x, SLIME_TEXT, _slimeTextPos, Color.White, 0.0f, _slimeTextOrigin, 1.0f, SpriteEffects.None, 1.0f);

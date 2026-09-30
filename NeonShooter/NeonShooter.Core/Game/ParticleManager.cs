@@ -14,6 +14,7 @@ namespace NeonShooter
 		// This delegate will be called for each particle.
 		private Action<Particle> updateParticle;
 		private CircularParticleArray particleList;
+		private int spawnCount;
 
 		/// <summary>
 		/// Allows creation of particles.
@@ -82,6 +83,9 @@ namespace NeonShooter
 
 		public void CreateParticle(Texture2D texture, Vector2 position, Color tint, float duration, Vector2 scale, T state, float theta = 0)
 		{
+			// The original Xbox cannot update and draw as many particles, so keep every other one.
+			if ((++spawnCount & 1) != 0)
+				return;
 			Particle particle;
 			if (particleList.Count == particleList.Capacity)
 			{

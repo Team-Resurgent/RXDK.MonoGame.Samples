@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- FuelCell for the original Xbox. The game is the shared FuelCell.Core sources; everything
+       console specific comes from the RXDK-DotNet props and targets.
+
+       Set RxdkRuntimeDir to the folder holding assemblies/ from rxdk-dotnet-runtime.zip. Left
+       unset it uses build-out/ from a checkout of RXDK-DotNet. -->
+  <Import Project="../../../../msbuild/Rxdk.Title.props" />
+
+  <PropertyGroup>
+    <RootNamespace>FuelCell</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../FuelCell.Core/**/*.cs" Exclude="../FuelCell.Core/Content/**;../FuelCell.Core/bin/**;../FuelCell.Core/obj/**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RxdkMgcb Include="../FuelCell.Core/Content/FuelCell.mgcb" />
+  </ItemGroup>
+
+  <Import Project="../../../../msbuild/Rxdk.Title.targets" />
+
+</Project>

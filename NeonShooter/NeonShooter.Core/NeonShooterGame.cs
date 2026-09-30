@@ -22,7 +22,6 @@ namespace NeonShooter
 
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
-		BloomComponent bloom;
 
 		bool paused = false;
 
@@ -39,10 +38,7 @@ namespace NeonShooter
             graphics.IsFullScreen = true;
 #endif
 
-            bloom = new BloomComponent(this);
-			Components.Add(bloom);
-			bloom.Settings = new BloomSettings(null, 0.25f, 4, 2, 1, 1.5f, 1);
-            bloom.Visible = false;
+            // The bloom component is left out: its shaders are HLSL, which the original Xbox cannot run.
         }
 
         protected override void Initialize()
@@ -51,7 +47,8 @@ namespace NeonShooter
 
             ParticleManager = new ParticleManager<ParticleState>(1024 * 20, ParticleState.UpdateParticle);
 
-            const int maxGridPoints = 1600;
+            // Grid physics and its line sprites are about half the frame on a 733 MHz Pentium III.
+            const int maxGridPoints = 800;
             Vector2 gridSpacing = new Vector2((float)Math.Sqrt(Viewport.Width * Viewport.Height / maxGridPoints));
             Grid = new Grid(Viewport.Bounds, gridSpacing);
 
@@ -104,8 +101,6 @@ namespace NeonShooter
 
             if (Input.WasKeyPressed(Keys.P))
                 paused = !paused;
-            if (Input.WasKeyPressed(Keys.B))
-                bloom.Visible = !bloom.Visible;
 
             if (!paused)
             {
@@ -124,8 +119,6 @@ namespace NeonShooter
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            bloom.BeginDraw();
-
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin(SpriteSortMode.Texture, BlendState.Additive);
@@ -145,8 +138,6 @@ namespace NeonShooter
             DrawTitleSafeAlignedString("Lives: " + PlayerStatus.Lives, 5);
             DrawTitleSafeRightAlignedString("Score: " + PlayerStatus.Score, 5);
             DrawTitleSafeRightAlignedString("Multiplier: " + PlayerStatus.Multiplier, 35);
-            // draw the custom mouse cursor
-            spriteBatch.Draw(Art.Pointer, Input.MousePosition, Color.White);
 
             if (PlayerStatus.IsGameOver)
             {
